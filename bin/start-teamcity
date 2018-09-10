@@ -1,0 +1,6 @@
+export TEAMCITY_URL="http://localhost:8111"
+$HOME/Library/TeamCity/bin/teamcity-server.sh start
+sleep 60
+$HOME/Library/TeamCity/buildAgentUI1/bin/agent.sh start
+$HOME/Library/TeamCity/buildAgentApi1/bin/agent.sh start
+$HOME/Library/TeamCity/buildAgentApi2/bin/agent.sh start

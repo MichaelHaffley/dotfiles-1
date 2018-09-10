@@ -1,20 +1,24 @@
 #!/bin/bash
 
-# Install brew
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
+# Update pkg lists
 echo "Updating package lists..."
-brew update
+sudo apt-get update
+
 # zsh install
+which zsh > /dev/null 2>&1
+if [[ $? -eq 0 ]] ; then
 echo ''
-echo "Now installing zsh..."
+echo "zsh already installed..."
+else
+echo "zsh not found, now installing zsh..."
 echo ''
-brew install zsh zsh-completions
+sudo apt install zsh -y
+fi
 
 # Installing git completion
 echo ''
 echo "Now installing git and bash-completion..."
-brew install git && brew install bash-completion
+sudo apt-get install git bash-completion -y
 
 echo ''
 echo "Now configuring git-completion..."
@@ -27,10 +31,25 @@ if ! curl "$URL" --silent --output "$HOME/.git-completion.bash"; then
 fi
 
 # oh-my-zsh install
+if [ -d ~/.oh-my-zsh/ ] ; then
 echo ''
-echo "Now installing oh-my-zsh..."
+echo "oh-my-zsh is already installed..."
+read -p "Would you like to update oh-my-zsh now?" -n 1 -r
+echo ''
+    if [[ $REPLY =~ ^[Yy]$ ]] ; then
+    cd ~/.oh-my-zsh && git pull
+        if [[ $? -eq 0 ]]
+        then
+            echo "Update complete..." && cd
+        else
+            echo "Update not complete..." >&2 cd
+        fi
+    fi
+else
+echo "oh-my-zsh not found, now installing oh-my-zsh..."
 echo ''
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
 
 # oh-my-zsh plugin install
 echo ''
@@ -76,10 +95,22 @@ mv ~/.vim/colors/wombat/colors/* ~/.vim/colors/
 echo ''
 echo "Now installing Midnight commander..."
 echo ''
-brew install mc
+sudo apt-get install mc -y
 
-# Speedtest-cli and jq install
-brew install jq speedtest-cli
+# Speedtest-cli, pip and jq install
+echo ''
+echo "Now installing Speedtest-cli, pip, tmux and jq..."
+echo ''
+sudo apt-get install jq tmux python-pip -y
+sudo pip install --upgrade pip
+sudo pip install speedtest-cli
+
+# Bash color scheme
+echo ''
+echo "Now installing solarized dark WSL color scheme..."
+echo ''
+wget https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.256dark
+mv dircolors.256dark .dircolors
 
 # Pull down personal dotfiles
 echo ''
@@ -93,18 +124,18 @@ then
 	echo ''
 	cd $HOME/.dotfiles && echo "switched to .dotfiles dir..."
 	echo ''
-	echo "Checking out macOS branch..." && git checkout mac
+	echo "Checking out wsl branch..." && git checkout wsl
 	echo ''
 	echo "Now configuring symlinks..." && $HOME/.dotfiles/script/bootstrap
     if [[ $? -eq 0 ]]
     then
-        echo "Successfully configured your environment with jldeen's macOS dotfiles..."
+        echo "Successfully configured your environment with jldeen's dotfiles..."
     else
-        echo "jldeen's macOS dotfiles were not applied successfully..." >&2
+        echo "jldeen's dotfiles were not applied successfully..." >&2
 fi
 else 
 	echo ''
-    echo "You chose not to apply jldeen's macOS dotfiles. You will need to configure your environment manually..."
+    echo "You chose not to apply jldeen's dotfiles. You will need to configure your environment manually..."
 	echo ''
 	echo "Setting defaults for .zshrc and .bashrc..."
 	echo ''
@@ -123,16 +154,24 @@ echo ''
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	echo "Now installing az cli..."
-    brew install azure-cli
+    AZ_REPO=$(lsb_release -cs)
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+     sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+    sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893
+    sudo curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    sudo apt-get install apt-transport-https
+    sudo apt-get update && sudo apt-get install azure-cli
+	
     if [[ $? -eq 0 ]]
     then
         echo "Successfully installed Azure CLI 2.0."
     else
         echo "Azure CLI not installed successfully." >&2
-fi
-else 
+    fi
+    else 
     echo "You chose not to install Azure CLI. Exiting now."
-fi
+    fi
 
 # Set default shell to zsh
 echo ''
@@ -141,7 +180,7 @@ echo ''
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	echo "Now setting default shell..."
-    chsh -s $(which zsh); exit 0
+    chsh -s $(which zsh)
     if [[ $? -eq 0 ]]
     then
         echo "Successfully set your default shell to zsh..."
@@ -151,5 +190,6 @@ fi
 else 
     echo "You chose not to set your default shell to zsh. Exiting now..."
 fi
+
 echo ''
-echo '	Badass macOS terminal installed!'
+echo '	Badass WSL terminal installed! Please reboot your computer for changes to be made.'
