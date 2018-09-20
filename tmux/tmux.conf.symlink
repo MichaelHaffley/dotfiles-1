@@ -73,43 +73,96 @@ set -g @tasks_icon_outstanding '+ '
 
 # Status bar ------------------------------------------------------------- 
 # set-option -g status on
-set-option -g set-titles on
-set -g status-interval 1
-set-option -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
-
-set -g status-position bottom
-set -g status-bg colour237
-set -g status-fg colour137
-set -g status-attr 'none'
-set -g status-left ' #[fg=colour197]#(~/bin/internet_info.sh) '
-set -g status-right '#(eval ~/.tmux/responsive `tmux display -p "#{client_width}"`)#[fg=colour165]#[bg=default] #H'
-set -g status-right-length 100
-set -g status-left-length 80
-
-set-window-option -g aggressive-resize
-setw -g window-status-current-fg colour170
-setw -g window-status-current-bg colour239
-setw -g window-status-current-attr bold
-setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour170]#F '
-
-set-option -g set-titles-string 'zsh | #S | / #W'
-setw -g window-status-current-fg colour170
-setw -g window-status-current-attr bold
-setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour170]#F '
-
-# Plugins
-# List of plugins
- set -g @tpm_plugins '          \
-   tmux-plugins/tpm             \
-   chriszarate/tmux-tasks       \
-   soyuka/tmux-current-pane-hostname     \
-   christoomey/vim-tmux-navigator       \
-'
-
+#set-option -g set-titles on
+#set -g status-interval 1
+#set-option -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
+#
+#set -g status-position bottom
+#set -g status-bg colour237
+#set -g status-fg colour137
+#set -g status-attr 'none'
+#set -g status-left ' #[fg=colour197]#(~/bin/internet_info.sh) '
+#set -g status-right '#(eval ~/.tmux/responsive `tmux display -p "#{client_width}"`)#[fg=colour165]#[bg=default] #H'
+#set -g status-right-length 100
+#set -g status-left-length 80
+#
+#set-window-option -g aggressive-resize
+#setw -g window-status-current-fg colour170
+#setw -g window-status-current-bg colour239
+#setw -g window-status-current-attr bold
+#setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour170]#F '
+#
+#set-option -g set-titles-string 'zsh | #S | / #W'
+#setw -g window-status-current-fg colour170
+#setw -g window-status-current-attr bold
+#setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour170]#F '
+#
+## Plugins
+## List of plugins
+# set -g @tpm_plugins '          \
+#   tmux-plugins/tpm             \
+#   chriszarate/tmux-tasks       \
+#   soyuka/tmux-current-pane-hostname     \
+#   christoomey/vim-tmux-navigator       \
+#'
+#
 # Other examples:
 # set -g @plugin 'github_username/plugin_name'
 # set -g @plugin 'git@github.com/user/plugin'
 # set -g @plugin 'git@bitbucket.com/user/plugin'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.tmux/plugins/tpm/tpm'
+#run '~/.tmux/plugins/tpm/tpm'
+
+######################
+#### DESIGN CHANGES ###
+#######################
+#
+## loud or quiet?
+#set-option -g visual-activity off
+#set-option -g visual-bell off
+#set-option -g visual-silence off
+#set-window-option -g monitor-activity off
+#set-option -g bell-action none
+#
+##  modes
+setw -g clock-mode-colour colour5
+setw -g mode-attr bold
+setw -g mode-fg colour1
+setw -g mode-bg colour18
+#
+## panes
+set -g pane-border-bg colour0
+set -g pane-border-fg colour19
+set -g pane-active-border-bg colour0
+set -g pane-active-border-fg colour9
+#
+## statusbar
+set -g status-position bottom
+set -g status-justify left
+set -g status-bg colour18
+set -g status-fg colour137
+set -g status-attr dim
+set -g status-left ''
+set -g status-right '#[fg=colour233,bg=colour19,bold] %m/%d #[fg=colour233,bg=colour8,bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+#
+setw -g window-status-current-fg colour1
+setw -g window-status-current-bg colour19
+setw -g window-status-current-attr bold
+setw -g window-status-current-format ' #I#[fg=colour249]:#[fg=colour255]#W#[fg=colour249]#F '
+#
+setw -g window-status-fg colour9
+setw -g window-status-bg colour18
+setw -g window-status-attr none
+setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+#
+setw -g window-status-bell-attr bold
+setw -g window-status-bell-fg colour255
+setw -g window-status-bell-bg colour1
+#
+## messages
+set -g message-attr bold
+set -g message-fg colour232
+set -g message-bg colour16

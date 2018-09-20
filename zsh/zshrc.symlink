@@ -16,7 +16,7 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # POWERLEVEL9K_PUBLIC_IP_HOST='http://ident.me'
 
 # zsh tmux settings
-ZSH_TMUX_AUTOSTART='true'
+ZSH_TMUX_AUTOSTART='false'
 
 ## Powerlevel9k Settings
 POWERLEVEL9K_HISTORY_BACKGROUND='green'
@@ -138,3 +138,8 @@ export PATH=$PATH:~/bin
 # az cli
 # autoload bashcompinit && bashcompinit
 # source /usr/bin/az
+fpath=($fpath "/home/phaffley/.zfunctions")
+
+  # Set Spaceship ZSH as a prompt
+  autoload -U promptinit; promptinit
+  prompt spaceship
